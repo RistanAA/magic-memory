@@ -1,22 +1,26 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import SingleCard from './components/SingleCard'
+import { useTimer } from 'react-timer-hook';
 
 const cardImages = [
-  { "src": "/img/helmet-1.png", matched: false },
+  { "src": "/img/success-kid.png", matched: false },
   { "src": "/img/potion-1.png", matched: false },
   { "src": "/img/ring-1.png", matched: false },
   { "src": "/img/scroll-1.png", matched: false },
-  { "src": "/img/shield-1.png", matched: false },
+  { "src": "/img/twitter.png", matched: false },
   { "src": "/img/sword-1.png", matched: false },
 ]
 
 function App() {
   const [cards, setCards] = useState([])
   const [turns, setTurns] = useState(0)
+  const [score, setScore] = useState(0)
   const [choiceOne, setChoiceOne] = useState(null)
   const [choiceTwo, setChoiceTwo] = useState(null)
   const [disabled, setDisabled] = useState(false)
+
+
   // shuffle cards
   const shuffleCards = () => {
     const shuffledCards = [...cardImages, ...cardImages]
@@ -25,8 +29,11 @@ function App() {
 
     setCards(shuffledCards)
     setTurns(0)
+    setScore(0)
     setChoiceOne(null)
     setChoiceTwo(null)
+    setDisabled(false)
+    restart(getDate())
   }
 
   // handle a choice
@@ -48,10 +55,12 @@ function App() {
             }
           })
         })
+        setScore(prevScore => prevScore + 10)
         console.log("match")
       } else {
         console.log("not match");
       }
+      
       setTimeout(() => resetTurn(), 1000);
     }
   }, [choiceOne, choiceTwo])
@@ -60,17 +69,54 @@ function App() {
     shuffleCards()
   }, [])
 
+  useEffect(() => {
+    if(score/10 === cardImages.length){
+      alert("Congratulation your score is "+score)
+      pause()
+    }
+  },[score])
+
   const resetTurn = () => {
+    
     setChoiceOne(null)
     setChoiceTwo(null)
     setTurns(prevTurns => prevTurns + 1)
     setDisabled(false)
   }
 
+  // custom hook timer
+  const getDate = () => {
+    const time = new Date();
+    time.setSeconds(time.getSeconds() + 90);
+    return time
+  }
+
+  const timesUp = () => {
+    setTimeout(() => {
+      setDisabled(true)
+      alert("time's up")
+    }, 1000);
+  }
+
+  const {
+    seconds,
+    minutes,
+    pause,
+    restart,
+  } = useTimer({ expiryTimestamp: getDate(), onExpire: () => timesUp() });
+
+
   return (
     <div className="App">
-      <h1>Magic Match</h1>
+      <h1>Memory Game</h1>
       <button onClick={shuffleCards}>New Game</button>
+      <div style={{ width: "100%", textAlign: "left" }}>
+        <h3>Score: {score}</h3>
+        <h3>Turn: {turns}</h3>
+      </div>
+      <div style={{ fontSize: '50px' }}>
+        <span>{minutes}</span>:<span>{seconds}</span>
+      </div>
 
       <div className='card-grid'>
         {cards.map(card => (
@@ -83,7 +129,6 @@ function App() {
           />
         ))}
       </div>
-      <p>Turn: {turns}</p>
     </div>
   );
 }
