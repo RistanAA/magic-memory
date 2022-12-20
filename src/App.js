@@ -1,9 +1,12 @@
-import Router from './Router';
+import Router from "./Router";
+import UseMobileAuthentication from "./hooks/useMobileAuthentication";
 
 function App() {
-  return(
-    <Router/>
-  )
+  return (
+    <UseMobileAuthentication>
+      <Router />
+    </UseMobileAuthentication>
+  );
 }
 
-export default App
+export default App;
