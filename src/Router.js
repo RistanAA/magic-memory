@@ -13,6 +13,7 @@ const Router = () => {
         <Route exact index element={<LoginPage />} />
         <Route exact path="/signup" element={<SignupPage />} />
         <Route path="/home" element={<Home/>}/>
+        <Route exact path="/leaderboard" element={<Leaderboard/>} />
       </Routes>
     </BrowserRouter>
   );
