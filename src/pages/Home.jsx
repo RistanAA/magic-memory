@@ -99,17 +99,23 @@ const Home = () => {
       dispatch(getCards());
       shuffleCards();
     }
-    pause()
+    pause();
   }, [dispatch, cardImages]);
 
   useEffect(() => {
     if (cardImages.length > 0) {
       if (score / 10 === cardImages.length) {
         let finalScore = score - 2 - turns * 2;
-        dispatch(sendScore({userId: "63a1a6952cabe62b5cabb3f1tes", username: "user2", score: finalScore}))
+        dispatch(
+          sendScore({
+            userId: "63a1a6952cabe62b5cabb3f1tes",
+            username: "user2",
+            score: finalScore,
+          })
+        );
         pause();
         alert("Congratulation your score final score is " + finalScore);
-        navigate('/leaderboard')
+        navigate("/leaderboard");
       }
     }
   }, [score]);
@@ -146,14 +152,22 @@ const Home = () => {
   // console.log(minutes)
   return (
     <div className="App">
-      <h1>Memory Game</h1>
-      <button onClick={shuffleCards}>New Game</button>
-      <div style={{ width: "100%", textAlign: "left" }}>
-        <h3>Score: {score}</h3>
-        <h3>Turn: {turns}</h3>
-      </div>
-      <div style={{ fontSize: "50px" }}>
-        <span>{minutes}</span>:<span>{seconds}</span>
+      {/* <h1>Memory Game</h1> */}
+      <div
+        style={{
+          margin: "auto",
+          width: "50%",
+          padding: "10px",
+        }}
+      >
+        <button onClick={shuffleCards}>New Game</button>
+        <div style={{ width: "100%", textAlign: "left" }}>
+          <h3 style={{ color: "white" }}>Score: {score}</h3>
+          <h3 style={{ color: "white" }}>Turn: {turns}</h3>
+        </div>
+        <div style={{ color: "white", fontSize: "50px" }}>
+          <span>{minutes}</span>:<span>{seconds}</span>
+        </div>
       </div>
       {/* <Timer ref={timerRef} timeLeft={timeLeft} setDisabled={setDisabled}/> */}
 

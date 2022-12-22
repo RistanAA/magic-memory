@@ -11,16 +11,27 @@ import {
 import { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import Icon from "@mui/material/Icon";
+import { useNavigate } from "react-router-dom";
+
 
 const navItems = ["Home", "About", "Contact"];
 const drawerWidth = 240;
 const Header = (props) => {
+  const navigate = useNavigate()
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+
+  const handleLeaderboard = () => {
+    navigate('/leaderboard')
+  }
+
+  const handleHome = () => {
+    navigate('/home')
+  }
   // const container =
   //   window !== undefined ? () => window().document.body : undefined;
   return (
@@ -45,6 +56,7 @@ const Header = (props) => {
               display: { xs: "none", sm: "block" },
               fontFamily: "Rubik Gemstones",
             }}
+            onClick={handleHome}
           >
             Magic Memory
           </Typography>
@@ -60,7 +72,7 @@ const Header = (props) => {
               <Icon>music_note</Icon>
             </IconButton>
             <IconButton sx={{ color: "white" }}>
-              <Icon>leaderboard</Icon>
+              <Icon onClick={handleLeaderboard}>leaderboard</Icon>
             </IconButton>
           </div>
         </Toolbar>

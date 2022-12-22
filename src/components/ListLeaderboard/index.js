@@ -14,21 +14,36 @@ const ListLeaderboard = () => {
     console.log(leaderboard);
     return (
         <div className='container'>
-            <h3>Leaderboard</h3>
+            <h3 style={{textAlign: "center",padding: "20px", color: "white"}}>Leaderboard</h3>
             <div className='list-item-container'>
                 {
                     leaderboard.map((item, index) => {
-                        return (
-                            <div key={item._id} className={'list-item ' + (item.username === 'user1' ? 'active' : null)}>
-                                <div className='user-detail'>
-                                    <p>{index + 1}</p>
-                                    <p>{item.username}</p>
+                        if(index < 5){
+                            return (
+                                <div key={item._id} className={'list-item ' + (item.username === 'user1' ? 'active' : null)}>
+                                    <div className='user-detail'>
+                                        <p>{index + 1}</p>
+                                        <p>{item.username}</p>
+                                    </div>
+                                    <div className='score'>
+                                        <p>{item.score} pts</p>
+                                    </div>
                                 </div>
-                                <div className='score'>
-                                    <p>{item.score} pts</p>
+                            )
+                        }
+                        else if( index > 5 && item.username === "user1"){
+                            return (
+                                <div key={item._id} className={'list-item ' + (item.username === 'user1' ? 'active' : null)}>
+                                    <div className='user-detail'>
+                                        <p>{index + 1}</p>
+                                        <p>{item.username}</p>
+                                    </div>
+                                    <div className='score'>
+                                        <p>{item.score} pts</p>
+                                    </div>
                                 </div>
-                            </div>
-                        )
+                            )
+                        }
                     })
                 }
                 {/* <div className='list-item'>

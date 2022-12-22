@@ -15,7 +15,7 @@ body {
     rgba(0, 0, 0, 1) 100%
   );
   background-repeat: no-repeat;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
   font-size: 1.5em;
   /* text-align: center;
