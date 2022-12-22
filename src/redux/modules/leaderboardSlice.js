@@ -5,7 +5,8 @@ const initialState = {
     scores: []
 }
 
-let url = 'http://localhost:5000/api/'
+let url = 'https://magic-memory-back-cq2guhwqd-ristanaa.vercel.app/api/'
+// let url = 'http://localhost:5000/api/'
 export const getScores = createAsyncThunk(
     'getScores',
     async (payload, thunkApi) => {

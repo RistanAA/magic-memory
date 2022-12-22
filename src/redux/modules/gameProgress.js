@@ -21,13 +21,15 @@ const initialState = {
     timeLeft: 0
 }
 
-let url = 'http://localhost:5000/api/'
+let url = 'https://magic-memory-back-cq2guhwqd-ristanaa.vercel.app/api/'
+// let url = 'http://localhost:5000/api/'
+
 export const sendScore = createAsyncThunk(
     'sendScore',
     async (payload, thunkApi) => {
         try {
-            // console.log(payload)
             await axios.post(url + 'score',payload)
+            console.log("success")
             // return thunkApi.fulfillWithValue(data.cards)
         } catch (error) {
             return console.log(error.message);

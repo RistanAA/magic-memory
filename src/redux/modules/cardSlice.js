@@ -5,7 +5,8 @@ const initialState = {
     cards: []
 }
 
-let url = 'http://localhost:5000/api/'
+let url = 'https://magic-memory-back-cq2guhwqd-ristanaa.vercel.app/api/'
+// let url = 'http://localhost:5000/api/'
 export const getCards = createAsyncThunk(
     'getCards',
     async (payload, thunkApi) => {

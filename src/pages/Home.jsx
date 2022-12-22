@@ -106,7 +106,7 @@ const Home = () => {
     if (cardImages.length > 0) {
       if (score / 10 === cardImages.length) {
         let finalScore = score - 2 - turns * 2;
-        dispatch(sendScore({userId: "63a1a6952cabe62b5cabb3f1tes3", username: "user3", score: finalScore}))
+        dispatch(sendScore({userId: "63a1a6952cabe62b5cabb3f1tes", username: "user2", score: finalScore}))
         pause();
         alert("Congratulation your score final score is " + finalScore);
         navigate('/leaderboard')
