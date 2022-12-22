@@ -1,24 +1,29 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "../App.css";
 import SingleCard from "../components/SingleCard";
 import { useTimer } from "react-timer-hook";
 import { useDispatch, useSelector } from "react-redux";
-import { addProgress } from "../redux/modules/gameProgress";
+import { addProgress, sendScore } from "../redux/modules/gameProgress";
+import ListCard from "../components/ListCard";
+import { getCards } from "../redux/modules/cardSlice";
+import { useNavigate } from "react-router-dom";
 // import Timer from "../components/Timer";
 
 const Home = () => {
   const gameProgress = useSelector((state) => state.gameProgress.cardImages);
   const timeLeft = useSelector((state) => state.gameProgress.timeLeft);
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  
-  const cardImages = [
-    { src: "/img/success-kid.png", srcId: "1", matched: false },
-    { src: "/img/potion-1.png", srcId: "2", matched: false },
-    { src: "/img/ring-1.png", srcId: "3", matched: false },
-    { src: "/img/scroll-1.png", srcId: "4", matched: false },
-    { src: "/img/twitter.png", srcId: "5", matched: false },
-    { src: "/img/sword-1.png", srcId: "6", matched: false },
-  ];
+  const cardImages = useSelector((state) => state.cardSlice.cards);
+  // const cardImages = [
+  //   { src: "/img/success-kid.png", srcId: "1", matched: false },
+  //   { src: "/img/potion-1.png", srcId: "2", matched: false },
+  //   { src: "/img/ring-1.png", srcId: "3", matched: false },
+  //   { src: "/img/scroll-1.png", srcId: "4", matched: false },
+  //   { src: "/img/twitter.png", srcId: "5", matched: false },
+  //   { src: "/img/sword-1.png", srcId: "6", matched: false },
+  // ];
   const [cards, setCards] = useState([]);
   const [turns, setTurns] = useState(0);
   const [score, setScore] = useState(0);
@@ -52,23 +57,27 @@ const Home = () => {
   //   dispatch(addProgress(cards));
   // };
 
+  const cardList = useMemo(() => cards, [cards]);
+
   useEffect(() => {
-    dispatch(addProgress({cards,minutes,seconds}));
+    setCards(cardList);
+    dispatch(addProgress({ cards, minutes, seconds }));
+    // console.log(cards);
   }, [dispatch, cards]);
 
+  // usememo
 
-// usememo
-
-
+  // const cardList = useMemo(() => cards,[cards])
+  // console.log(cardList)
 
   // compare 2 selected cards
   useEffect(() => {
     if (choiceOne && choiceTwo) {
       setDisabled(true);
-      if (choiceOne.srcId === choiceTwo.srcId) {
+      if (choiceOne._id === choiceTwo._id) {
         setCards((prevCards) => {
           return prevCards.map((card) => {
-            if (card.srcId === choiceOne.srcId) {
+            if (card._id === choiceOne._id) {
               return { ...card, matched: true };
             } else {
               return card;
@@ -76,9 +85,9 @@ const Home = () => {
           });
         });
         setScore((prevScore) => prevScore + 10);
-        console.log("match");
+        // console.log("match");
       } else {
-        console.log("not match");
+        // console.log("not match");
       }
 
       setTimeout(() => resetTurn(), 1000);
@@ -86,14 +95,22 @@ const Home = () => {
   }, [choiceOne, choiceTwo]);
 
   useEffect(() => {
-    shuffleCards();
-  }, []);
+    if (cardImages.length < 1) {
+      dispatch(getCards());
+      shuffleCards();
+    }
+    pause()
+  }, [dispatch, cardImages]);
 
   useEffect(() => {
-    if (score / 10 === cardImages.length) {
-      let finalScore = score - 2 - (turns * 2)
-      alert("Congratulation your score final score is " + finalScore);
-      pause();
+    if (cardImages.length > 0) {
+      if (score / 10 === cardImages.length) {
+        let finalScore = score - 2 - turns * 2;
+        dispatch(sendScore({userId: "63a1a6952cabe62b5cabb3f1tes3", username: "user3", score: finalScore}))
+        pause();
+        alert("Congratulation your score final score is " + finalScore);
+        navigate('/leaderboard')
+      }
     }
   }, [score]);
   // console.log(gameProgress);
@@ -110,7 +127,7 @@ const Home = () => {
   // custom hook timer
   const getDate = () => {
     const time = new Date();
-    let addTime = timeLeft ? timeLeft : 90
+    let addTime = timeLeft ? timeLeft : 90;
     time.setSeconds(time.getSeconds() + addTime);
     return time;
   };
@@ -126,7 +143,7 @@ const Home = () => {
     expiryTimestamp: getDate(),
     onExpire: () => timesUp(),
   });
-// console.log(minutes)
+  // console.log(minutes)
   return (
     <div className="App">
       <h1>Memory Game</h1>
@@ -140,7 +157,15 @@ const Home = () => {
       </div>
       {/* <Timer ref={timerRef} timeLeft={timeLeft} setDisabled={setDisabled}/> */}
 
-      <div className="card-grid">
+      {/* componen baru */}
+      <ListCard
+        cards={cardList}
+        handleChoice={handleChoice}
+        choiceOne={choiceOne}
+        choiceTwo={choiceTwo}
+        disabled={disabled}
+      />
+      {/* <div className="card-grid">
         {cards.map((card) => (
           <SingleCard
             key={card.id}
@@ -150,7 +175,7 @@ const Home = () => {
             disabled={disabled}
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
